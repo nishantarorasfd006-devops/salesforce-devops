@@ -14,20 +14,18 @@ pipeline {
       }
     }
 
-    stage('Build') {
+    stage('Static Code Analysis') {
       steps {
-        echo "Building ${params.BRANCH_NAME}"
+        bat 'sfdx scanner:run --target "force-app" --format table'
       }
     }
 
-    stage('Test') {
+    stage('Run Apex Tests') {
       when {
-        expression {
-          params.RUN_TESTS == 'YES'
-        }
+        expression { params.RUN_TESTS == 'YES' }
       }
       steps {
-        echo "Running tests..."
+        bat 'sfdx force:apex:test:run -u yourOrgAlias --codecoverage -r human'
       }
     }
   }
