@@ -10,7 +10,7 @@ pipeline {
     stage('Clone Code') {
       steps {
         git branch: "${params.BRANCH_NAME}",
-            url: 'https://github.com/YOUR-REPO.git'
+            url: 'https://github.com/nishantarorasfd006-devops/salesforce-devops.git'
       }
     }
 
