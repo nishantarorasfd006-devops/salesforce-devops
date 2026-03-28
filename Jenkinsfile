@@ -1,14 +1,33 @@
 pipeline {
   agent any
+
+  parameters {
+    string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch to build')
+    choice(name: 'RUN_TESTS', choices: ['YES', 'NO'], description: 'Run tests or not')
+  }
+
   stages {
-    stage('Clone') {
+    stage('Clone Code') {
       steps {
-        echo 'Code pulled from Git'
+        git branch: "${params.BRANCH_NAME}",
+            url: 'https://github.com/YOUR-REPO.git'
       }
     }
+
     stage('Build') {
       steps {
-        echo 'Build running...'
+        echo "Building ${params.BRANCH_NAME}"
+      }
+    }
+
+    stage('Test') {
+      when {
+        expression {
+          params.RUN_TESTS == 'YES'
+        }
+      }
+      steps {
+        echo "Running tests..."
       }
     }
   }
