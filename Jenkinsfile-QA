@@ -13,10 +13,21 @@ pipeline {
             url: 'https://github.com/nishantarorasfd006-devops/salesforce-devops.git'
       }
     }
+  stage('Debug CLI') {
+    steps {
+      bat 'sf --version'
+      bat 'sf plugins'
+    }
+  }
+  stage('Check Plugins') {
+    steps {
+      bat 'sf plugins'
+    }
+  }
 
     stage('Static Code Analysis') {
       steps {
-        bat 'sfdx scanner:run --target "force-app" --format table'
+        bat 'sf scanner run --target "force-app" --format table'
       }
     }
 
