@@ -1,0 +1,43 @@
+pipeline {
+  agent any
+
+  parameters {
+    string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch to build')
+    choice(name: 'RUN_TESTS', choices: ['YES', 'NO'], description: 'Run tests or not')
+  }
+
+  stages {
+    stage('Clone Code') {
+      steps {
+        git branch: "${params.BRANCH_NAME}",
+            url: 'https://github.com/nishantarorasfd006-devops/salesforce-devops.git'
+      }
+    }
+  stage('Debug CLI') {
+    steps {
+      bat 'sf --version'
+      bat 'sf plugins'
+    }
+  }
+  stage('Check Plugins') {
+    steps {
+      bat 'sf plugins'
+    }
+  }
+
+    stage('Static Code Analysis') {
+      steps {
+        bat 'sf scanner run --target "force-app" --format table'
+      }
+    }
+
+    stage('Run Apex Tests') {
+      when {
+        expression { params.RUN_TESTS == 'YES' }
+      }
+      steps {
+        bat 'sfdx force:apex:test:run -u yourOrgAlias --codecoverage -r human'
+      }
+    }
+  }
+}

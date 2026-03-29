@@ -8,6 +8,7 @@ trigger totalSlaryTrigger on Contact (after insert, after update) {
                 AccountIdSet.add(con.AccountId);
             } else {
                 AccountIdSet.add(con.AccountId);
+                System.debug('test deployment devops');
             }
         }
     }
